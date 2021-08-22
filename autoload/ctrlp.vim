@@ -390,7 +390,24 @@ fu! s:UserCmd(lscmd)
 	if has('win32') || has('win64')
 		let lscmd = substitute(lscmd, '\v(^|\&\&\s*)\zscd (/d)@!', 'cd /d ', '')
 	en
-	let path = exists('*shellescape') ? shellescape(path) : path
+        let specific_folders = get(g:, 'ctrlp_indexing_specific_folders_only', {})
+        let found_specific_folder = 0
+        for [root_folder, sub_folders] in items(specific_folders)
+          if fnamemodify(path, ':t') ==# root_folder
+            let sub_paths = []
+            for folder in sub_folders
+              let folder = path . '/' . folder
+              let folder = exists('*shellescape') ? shellescape(folder) : folder
+              let sub_paths = add(sub_paths, folder)
+            endfor
+            let path = join(sub_paths, " ")
+            let found_specific_folder = 1
+            break
+          endif
+        endfor
+        if found_specific_folder == 0
+	  let path = exists('*shellescape') ? shellescape(path) : path
+        endif
 	let g:ctrlp_allfiles = split(system(printf(lscmd, path)), "\n")
 	if exists('+ssl') && exists('ssl')
 		let &ssl = ssl
