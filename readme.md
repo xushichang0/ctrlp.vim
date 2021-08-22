@@ -74,7 +74,7 @@ Use `:diffthis` when opening multiple files to run `:diffthis` on the first 4 fi
       \ }
     ```
 
-* Index only specific subfolders if the root folder is a specific folder. This is useful when the root folder contains a large number of files (which can take forever to index) and we are only interested in a few subfolders.
+* Index only specific subfolders if the root folder is a specific folder. This is useful when the root folder contains a large number of files (which can take forever to index) and we are only interested in a few subfolders.  Currently this only works when external commands (such as ag) are used to search the files. Native vim listing will ignore the option.
     ```vim
     let g:ctrlp_indexing_specific_folders_only = {'giant_project': [
       \ 'a/b/c',
